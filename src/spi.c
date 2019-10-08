@@ -19,7 +19,7 @@ void spi_config(void)
     spi_init_struct.frame_size = SPI_FRAMESIZE_8BIT;
     spi_init_struct.clock_polarity_phase = SPI_CK_PL_HIGH_PH_2EDGE;
     spi_init_struct.nss = SPI_NSS_SOFT;
-    spi_init_struct.prescale = SPI_PSC_256;
+    spi_init_struct.prescale = SPI_PSC_16;
     spi_init_struct.endian = SPI_ENDIAN_LSB; // LSB First.
     spi_init(SPI0, &spi_init_struct);
 }
@@ -68,14 +68,14 @@ uint8_t spi_send(uint8_t data)
 
 uint8_t stb_high(void)
 {
-    delay_1ms(1);
+    delay_1us(10);
     GPIO_BOP(GPIOA) = GPIO_PIN_4;
-    delay_1ms(1);
+    delay_1us(10);
 }
 
 uint8_t stb_low(void)
 {
-    delay_1ms(1);
+    delay_1us(10);
     GPIO_BC(GPIOA) = GPIO_PIN_4;
-    delay_1ms(1);
+    delay_1us(10);
 }

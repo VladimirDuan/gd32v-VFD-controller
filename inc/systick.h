@@ -38,5 +38,6 @@ OF SUCH DAMAGE.
 #include <stdint.h>
 
 void delay_1ms(uint32_t count);
+void delay_1us(uint32_t count);
 
 #endif /* SYS_TICK_H */

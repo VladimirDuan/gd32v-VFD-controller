@@ -121,14 +121,70 @@ int main(void)
 
     while (1)
     {
+        //delay_1ms(2000);
+        display_string("            ");
+        display_string("D           ");
+        display_string("LD          ");
+        display_string("RLD         ");
+        display_string("ORLD        ");
+        display_string("WORLD       ");
+        display_string(" WORLD      ");
+        display_string("O WORLD     ");
+        display_string("LO WORLD    ");
+        display_string("LLO WORLD   ");
+        display_string("ELLO WORLD  ");
+        display_string("HELLO WORLD ");
+        display_string(" HELLO WORLD");
+        display_string("  HELLO WORL");
+        display_string("   HELLO WOR");
+        display_string("    HELLO WO");
+        display_string("     HELLO W");
+        display_string("      HELLO ");
+        display_string("       HELLO");
+        display_string("        HELL");
+        display_string("         HEL");
+        display_string("          HE");
+        display_string("           H");
+        display_string("            ");
+        display_string("           H");
+        display_string("          HE");
+        display_string("         HEL");
+        display_string("        HELL");
+        display_string("       HELLO");
+        display_string("      HELLO ");
+        display_string("     HELLO W");
+        display_string("    HELLO WO");
+        display_string("   HELLO WOR");
+        display_string("  HELLO WORL");
+        display_string(" HELLO WORLD");
+        display_string("HELLO WORLD ");
+        display_string("ELLO WORLD  ");
+        display_string("LLO WORLD   ");
+        display_string("LO WORLD    ");
+        display_string("O WORLD     ");
+        display_string(" WORLD      ");
+        display_string("WORLD       ");
+        display_string("ORLD        ");
+        display_string("RLD         ");
+        display_string("LD          ");
+        display_string("D           ");
+        display_string("            ");
+
+            // TODO: fetch real information from pc by usb-hid.
+        display_string("** CPU-41 **");
         delay_1ms(2000);
-        display_string("VFD DISABLED");
+        display_string("** MEM-28 **");
+        delay_1ms(2000);
+
+
+        /*
         delay_1ms(500);
-        GPIO_BC(GPIOB) = GPIO_PIN_0; // ROYER DEN   
+        //GPIO_BC(GPIOB) = GPIO_PIN_0; // ROYER DEN   
         delay_1ms(1000);
         
         display_string("VFD ENABLED");
         GPIO_BOP(GPIOB) = GPIO_PIN_0; // ROYER EN   
+        */
     }
 }
 
@@ -179,5 +235,6 @@ uint16_t display_string(unsigned char* str)
     display_seg(newstr[0]);
 
     stb_high();
+        delay_1ms(100);
 }
 
