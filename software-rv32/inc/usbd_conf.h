@@ -1,8 +1,8 @@
 /*!
-    \file  usbh_transc.h
-    \brief USB host mode transactions header file
+    \file  usbd_conf.h
+    \brief the header file of USBFS device-mode configuration
 
-    \version 2019-6-5, V1.0.0, firmware for GD32 USBFS&USBHS
+    \version 2019-6-5, V1.0.0, firmware for GD32VF103
 */
 
 /*
@@ -32,23 +32,37 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#ifndef __USBH_TRANSC_H
-#define __USBH_TRANSC_H
+#ifndef USBFS_CONF_H
+#define USBFS_CONF_H
 
 #include "usb_conf.h"
-#include "usbh_core.h"
 
-/* send the setup packet to the USB device */
-usbh_status usbh_ctlsetup_send (usb_core_driver *pudev, uint8_t *buf, uint8_t pp_num);
+#define USBD_CFG_MAX_NUM                   1
+#define USBD_ITF_MAX_NUM                   1
+#define USB_STR_DESC_MAX_SIZE              64
 
-/* send a data packet to the USB device */
-usbh_status usbh_data_send (usb_core_driver *pudev, uint8_t *buf, uint8_t pp_num, uint16_t len);
+#define USB_STRING_COUNT                   4
 
-/* receive a data packet from the USB device */
-usbh_status usbh_data_recev (usb_core_driver *pudev, uint8_t *buf, uint8_t pp_num, uint16_t len);
+#define IAP_IN_EP                          EP1_IN
+#define IAP_OUT_EP                         EP1_OUT
 
-/* USB control transfer handler */
-usbh_status usbh_ctl_handler (usb_core_driver *pudev, usbh_host *puhost);
+#define IAP_IN_PACKET                      24
+#define IAP_OUT_PACKET                     64
 
-#endif /* __USBH_TRANSC_H */
+#define TRANSFER_SIZE                      62
 
+#define PAGE_SIZE                          1024  /* MCU page size */
+
+/* maximum number of supported memory media (Flash, RAM or EEPROM and so on) */
+#define MAX_USED_MEMORY_MEDIA              1
+
+/* memory address from where user application will be loaded, which represents 
+   the DFU code protected against write and erase operations.*/
+#define APP_LOADED_ADDR                    0x08010000
+
+/* make sure the corresponding memory where the DFU code should not be loaded
+   cannot be erased or overwritten by DFU application. */
+#define IS_PROTECTED_AREA(addr)            (uint8_t)(((addr >= 0x08000000) && \
+                                           (addr < (APP_LOADED_ADDR)))? 1 : 0)
+
+#endif /* USBD_CONF_H */

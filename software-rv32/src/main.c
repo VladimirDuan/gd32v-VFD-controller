@@ -33,12 +33,31 @@ OF SUCH DAMAGE.
 */
 
 #include "gd32vf103.h"
-#include "gd32v103v_eval.h"
 #include "systick.h"
 #include <stdio.h>
 #include <string.h>
 #include "spi.h"
+#include "drv_usb_hw.h"
+#include "iap_core.h"
+#include "riscv_encoding.h"
 
+unsigned char disp_mem[64] = "#UNDEFINED# ";
+
+usb_core_driver USB_OTG_dev = 
+{
+    .dev = {
+        .desc = {
+            .dev_desc       = (uint8_t *)&device_descripter,
+            .config_desc    = (uint8_t *)&configuration_descriptor,
+            .strings        = usbd_strings,
+        }
+    }
+};
+
+pAppFunction application;
+
+extern uint8_t usbd_serial_string[];
+void serial_string_create(void);
 
 uint16_t calculate_segments_14(uint8_t character);
 uint16_t display_seg(unsigned char c);
@@ -52,6 +71,13 @@ uint16_t display_string(unsigned char* str);
 */
 int main(void)
 {
+    
+    eclic_global_interrupt_enable();
+
+    eclic_priority_group_set(ECLIC_PRIGROUP_LEVEL2_PRIO2);
+  
+    usb_timer_init();
+
     /* peripheral clock enable */
     rcu_config();
     rcu_periph_clock_enable(RCU_USART0);
@@ -118,6 +144,21 @@ int main(void)
     stb_low();
     spi_send(0b10001111);   // display on
     stb_high();
+    
+    GPIO_BOP(GPIOA) = GPIO_PIN_0;   // USB ENABLE
+    
+    /* configure USB clock */
+    usb_rcu_config();
+
+    serial_string_create();
+
+    usb_intr_config();
+
+    usbd_init (&USB_OTG_dev, USB_CORE_ENUM_FS, &usbd_hid_cb);
+
+    /* check if USB device is enumerated successfully */
+    while (USB_OTG_dev.dev.cur_status != USBD_CONFIGURED) {
+    }
 
     while (1)
     {
@@ -176,7 +217,11 @@ int main(void)
         display_string("** MEM-28 **");
         delay_1ms(2000);
 
-
+        while(1)
+        {
+            display_string(disp_mem);
+            delay_1ms(10);
+        }
         /*
         delay_1ms(500);
         //GPIO_BC(GPIOB) = GPIO_PIN_0; // ROYER DEN   
@@ -237,4 +282,24 @@ uint16_t display_string(unsigned char* str)
     stb_high();
         delay_1ms(100);
 }
+
+
+/*!
+    \brief      create the serial number string descriptor
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void  serial_string_create (void)
+{
+    uint32_t device_serial = *(uint32_t*)DEVICE_ID;
+
+    if (0 != device_serial) {
+        usbd_serial_string[2] = (uint8_t)device_serial;
+        usbd_serial_string[3] = (uint8_t)(device_serial >> 8);
+        usbd_serial_string[4] = (uint8_t)(device_serial >> 16);
+        usbd_serial_string[5] = (uint8_t)(device_serial >> 24);
+    }
+}
+
 

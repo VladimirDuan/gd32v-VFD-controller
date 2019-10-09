@@ -25,6 +25,7 @@ BUILD_DIR = build
 C_SOURCES =  \
 $(wildcard lib/GD32VF103_standard_peripheral/Source/*.c) \
 $(wildcard lib/GD32VF103_standard_peripheral/*.c) \
+$(wildcard lib/GD32VF103_usbfs_driver/Source/*.c) \
 $(wildcard lib/RISCV/stubs/*.c) \
 $(wildcard lib/RISCV/drivers/*.c) \
 $(wildcard src/*.c) \
@@ -68,6 +69,7 @@ AS_DEFS =
 C_DEFS =  \
 -DUSE_STDPERIPH_DRIVER \
 -DHXTAL_VALUE=8000000U \
+-DUSE_USB_FS \
 
 # AS includes
 AS_INCLUDES = 
@@ -77,13 +79,14 @@ C_INCLUDES =  \
 -Iinc \
 -Ilib/GD32VF103_standard_peripheral/Include \
 -Ilib/GD32VF103_standard_peripheral \
+-Ilib/GD32VF103_usbfs_driver/Include \
 -Ilib/RISCV/drivers \
 -IDrivers/CMSIS
 
 # compile gcc flags
-ASFLAGS = $(ARCH) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wl,-Bstatic#, -ffreestanding -nostdlib
+ASFLAGS = $(ARCH) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -fshort-wchar -Wl,-Bstatic#, -ffreestanding -nostdlib
 
-CFLAGS = $(ARCH) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wl,-Bstatic#, -ffreestanding -nostdlib
+CFLAGS = $(ARCH) $(C_DEFS) $(C_INCLUDES) $(OPT) -fshort-wchar -Wl,-Bstatic#, -ffreestanding -nostdlib
 
 ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2

@@ -35,6 +35,8 @@ OF SUCH DAMAGE.
 #include "drv_usb_core.h"
 #include "drv_usb_hw.h"
 
+#define __packed
+
 /*!
     \brief      config USB core to soft reset
     \param[in]  usb_regs: USB core registers

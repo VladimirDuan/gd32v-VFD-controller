@@ -1,8 +1,8 @@
 /*!
-    \file  drv_usbh_int.h.h
-    \brief USB host mode interrupt management header file
+    \file  gd32vf103_it.c
+    \brief main interrupt service routines
 
-    \version 2019-6-5, V1.0.0, firmware for GD32 USBFS&USBHS
+    \version 2019-6-5, V1.0.0, firmware for GD32VF103
 */
 
 /*
@@ -32,18 +32,65 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#ifndef __DRV_USBH_INT_H
-#define __DRV_USBH_INT_H
+#include "drv_usbd_int.h"
+#include "drv_usb_hw.h"
+#include "gd32vf103_it.h"
 
-#include "drv_usb_host.h"
+extern usb_core_driver USB_OTG_dev;
+extern uint32_t usbfs_prescaler;
 
-typedef struct _usbh_int_cb
+extern void usb_timer_irq(void);
+
+/*!
+    \brief      this function handles USBD interrupt
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void  USBFS_IRQHandler (void)
 {
-    uint8_t (*SOF)              (usb_core_driver *pudev);
-} usbh_int_cb;
+    usbd_isr (&USB_OTG_dev);
+}
 
-extern usbh_int_cb *usbh_int_fop;
+/*!
+    \brief      this function handles EXTI0_IRQ Handler
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void EXTI0_IRQHandler(void)
+{
 
-uint32_t usbh_isr (usb_core_driver *pudev);
+}
 
-#endif /* __DRV_USBH_INT_H */
+/*!
+    \brief      this function handles USBD wakeup interrupt request.
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void USBFS_WKUP_IRQHandler(void)
+{
+    if (USB_OTG_dev.bp.low_power) {
+        SystemInit();
+
+        rcu_usb_clock_config(usbfs_prescaler);
+
+        rcu_periph_clock_enable(RCU_USBFS);
+
+        usb_clock_active(&USB_OTG_dev);
+    }
+
+    exti_interrupt_flag_clear(EXTI_18);
+}
+
+/*!
+    \brief      this function handles Timer0 updata interrupt request.
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void TIMER2_IRQHandler(void)
+{
+    usb_timer_irq();
+}

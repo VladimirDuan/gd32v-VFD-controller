@@ -37,8 +37,8 @@ void gpio_config(void)
     gpio_init(GPIOA, GPIO_MODE_IN_FLOATING, GPIO_OSPEED_50MHZ, GPIO_PIN_6);
     //gpio_pin_remap_config(GPIO_SPI0_REMAP, ENABLE);
 
-    /* SPI0 GPIO config: CS/PA4 */
-    gpio_init(GPIOA, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_4);
+    /* SPI0 GPIO config: CS/PA4 USBEN/PA0*/
+    gpio_init(GPIOA, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_4 | GPIO_PIN_0);
 
     /* PB0/VFDEN */
     gpio_init(GPIOB, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_0);

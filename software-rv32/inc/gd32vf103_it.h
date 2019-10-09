@@ -1,8 +1,8 @@
 /*!
-    \file  usbh_pipe.h
-    \brief USB host mode pipe header file
+    \file  gd32vf103_it.h
+    \brief the header file of the ISR
 
-    \version 2019-6-5, V1.0.0, firmware for GD32 USBFS&USBHS
+    \version 2019-6-5, V1.0.0, firmware for GD32VF103
 */
 
 /*
@@ -32,39 +32,23 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#ifndef __USBH_PIPE_H
-#define __USBH_PIPE_H
+#ifndef GD32VF103_IT_H
+#define GD32VF103_IT_H
 
-#include "usbh_core.h"
+#ifdef __cplusplus
+extern "C" {
+#endif 
 
-#define HC_MAX                  8U
+#include "usbd_core.h"
 
-#define HC_OK                   0x0000U
-#define HC_USED                 0x8000U
-#define HC_ERROR                0xFFFFU
-#define HC_USED_MASK            0x7FFFU
+/* function declarations */
+/* this function handles USB wakeup interrupt handler */
+void USBFS_WKUP_IRQHandler(void);
+/* this function handles USBFS IRQ Handler */
+void USBFS_IRQHandler(void);
 
-/* allocate a new pipe */
-uint8_t usbh_pipe_allocate (usb_core_driver *pudev, uint8_t ep_addr);
+#ifdef __cplusplus
+}
+#endif
 
-/* delete all USB host pipe */
-uint8_t usbh_pipe_delete (usb_core_driver *pudev);
-
-/* free a pipe */
-uint8_t usbh_pipe_free (usb_core_driver *pudev, uint8_t pp_num);
-
-/* create a pipe */
-uint8_t usbh_pipe_create (usb_core_driver *pudev,
-                          usb_dev_prop *udev,
-                          uint8_t  pp_num,
-                          uint8_t  ep_type,
-                          uint16_t ep_mpl);
-
-/* modify a pipe */
-uint8_t usbh_pipe_update (usb_core_driver *pudev,
-                          uint8_t  pp_num,
-                          uint8_t  dev_addr,
-                          uint32_t dev_speed,
-                          uint16_t ep_mpl);
-
-#endif /* __USBH_PIPE_H */
+#endif /* GD32VF103_IT_H */
